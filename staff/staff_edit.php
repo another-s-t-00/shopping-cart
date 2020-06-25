@@ -52,9 +52,10 @@
     <br />
     <form method="post" action="staff_edit_check.php">
         <input type="hidden" name="code" value="<?php print $staff_code; ?>">
+        <!-- PHPの変数に入っているものを表示する（これは非表示） -->
         スタッフ名<br />
         <input type="text" name="name" style="width:200px" value="<?php print $staff_name; ?>"><br />
-        <!-- 名前は入力済み -->
+        <!-- 名前は入力済み（valueにセットした値が初期値）（初期化） -->
         パスワードを入力してください。<br />
         <input type="password" name="pass" style="width:100px"><br />
         パスワードをもう１度入力してください。<br />
@@ -63,16 +64,6 @@
         <input type="button" onclick="history.back()" value="戻る">
         <input type="submit" value="OK">
     </form>
-    <input type="" name="name" style="width:200px" value="<?php print $staff_name; ?>"><br />
-
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-
-
 
 </body>
 
