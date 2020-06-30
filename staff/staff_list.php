@@ -32,8 +32,8 @@ $dbh = null;
 
 print 'スタッフ一覧<br/><br/>';
 
-print'<form method="post" action="staff_edit.php">';
-//スタッフ修正画面へ飛べるようにするフォームを設置
+print'<form method="post" action="staff_branch.php">';
+//フォームを設置（飛び先は一箇所）
 while(true)
 {
     $rec = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -49,7 +49,8 @@ while(true)
     print $rec['name'];
     print '</br>';
 }
-print '<input type="submit" value="修正">';
+print '<input type="submit" name="edit" value="修正">';
+print '<input type="submit" name="delete" value="削除">';
 //postを実行するボタンを設置
 print '</form>';
 
