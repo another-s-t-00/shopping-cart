@@ -12,11 +12,12 @@
 //・GETリクエスト：データがURLにも引き渡される
 //・POSTリクエスト：データがURLには引き渡されない
 //よって、パスワード等を含む場合は「POSTリクエスト」を使用
+$pro_code = $_POST['code'];
 $pro_name=$_POST['name'];
-$pro_price = $_POST['price'];
-$pro_image = $_FILES['image'];
+$pro_price=$_POST['price'];
 
 //サニタイジング（Sanitizing、無害化、セキュリティ対策）
+$pro_code = htmlspecialchars($pro_code);
 $pro_name=htmlspecialchars($pro_name);
 $pro_price=htmlspecialchars($pro_price);
 
@@ -41,35 +42,18 @@ if (preg_match('/^[0-9]+$/', $pro_price) == 0) {
     print '円<br/>';
 }
 
-if($pro_image['size'] > 0)
-// 単位はByte
-{
-    if($pro_image['size'] > 1000000)
-    {
-        print '画像が大き過ぎます。';
-    }
-    else
-    {
-        move_uploaded_file($pro_image['tmp_name'],'./image/'.$pro_image['name']);
-        //$pro_image['tmp_name'] => 仮にアップロードされている画像本体の場所と名前
-        print '<img src="./image/' . $pro_image['name'].'">';
-        print '<br/>';
-    }
-}
-
-
-if ( $pro_name == ''|| preg_match('/^[0-9]+$/', $pro_price) == false || $pro_image['size'] > 1000000) {
+if ( $pro_name == ''|| preg_match('/^[0-9]+$/', $pro_price) == 0) {
     //もし半角数字じゃなかったら
     print '<form>';
     print '<input type="button" onclick="history.back()" value="戻る">';
     //「onclick="history.back()"」は入力したデータを消さずに前の画面に戻る
     print '</form>';
 } else {
-    print '上記の商品を追加します。<br/>';
-    print '<form method="post" action="pro_add_done.php">';
+    print '上記のように変更します。<br/>';
+    print '<form method="post" action="pro_edit_done.php">';
+    print '<input type="hidden" name="code" value="' . $pro_code . '">';
     print '<input type="hidden" name="name" value="' . $pro_name . '">';
     print '<input type="hidden" name="price" value="' . $pro_price . '">';
-    print '<input type="hidden" name="image_name" value="' . $pro_image['name'] . '">';
     print '<br/>';
     print '<input type="button" onclick="history.back()" value="戻る">';
     print '<input type="submit" value="OK">';
