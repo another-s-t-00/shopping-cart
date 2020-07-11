@@ -15,7 +15,8 @@ try
 {
 
 $pro_name = $_POST['name'];
-$pro_price = $_POST['price'];
+    $pro_price = $_POST['price'];
+    $pro_image_name = $_POST['image_name'];
 
 //サニタイジング
 $pro_name = htmlspecialchars($pro_name);
@@ -42,12 +43,13 @@ $dbh->query('SET NAMES utf8');
 //      インスタンス(完成車)のプロパティ(パーツ)・メソッド(動き方)を取り出す）
 
 //<--2.SQL文指令（レコード(データベースの行)を追加）-->
-$sql = 'INSERT INTO mst_product (name,price) VALUES (?,?)';
+$sql = 'INSERT INTO mst_product (name,price,image) VALUES (?,?,?)';
 $stmt = $dbh->prepare($sql);
 //文を実行する準備を行い、文オブジェクトを返す
 $data[] = $pro_name;
-$data[] = $pro_price;
-$stmt->execute($data);
+    $data[] = $pro_price;
+    $data[] = $pro_image_name;
+    $stmt->execute($data);
 //準備したプリペアドステートメントを実行
 
 //<--3.データベースから切断-->

@@ -51,6 +51,8 @@ if($pro_image['size'] > 0)
     else
     {
         move_uploaded_file($pro_image['tmp_name'],'./image/'.$pro_image['name']);
+        //move_uploaded_file(移動元，移動先)
+        //tmp = temporary(一時的な)
         //$pro_image['tmp_name'] => 仮にアップロードされている画像本体の場所と名前
         print '<img src="./image/' . $pro_image['name'].'">';
         print '<br/>';
