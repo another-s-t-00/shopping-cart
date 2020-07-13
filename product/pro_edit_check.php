@@ -14,7 +14,9 @@
 //よって、パスワード等を含む場合は「POSTリクエスト」を使用
 $pro_code = $_POST['code'];
 $pro_name=$_POST['name'];
-$pro_price=$_POST['price'];
+$pro_price = $_POST['price'];
+$pro_image_name_old = $_POST['image_name_old'];
+$pro_image = $_FILES['image'];
 
 //サニタイジング（Sanitizing、無害化、セキュリティ対策）
 $pro_code = htmlspecialchars($pro_code);
@@ -30,6 +32,24 @@ if ($pro_name == '') {
     print $pro_name;
     print '<br/>';
 }
+
+
+if ($pro_image['size'] > 0)
+// 単位はByte
+{
+    if ($pro_image['size'] > 1000000) {
+        print '画像が大き過ぎます。';
+    } else {
+        move_uploaded_file($pro_image['tmp_name'], './image/' . $pro_image['name']);
+        //move_uploaded_file(移動元，移動先)
+        //tmp = temporary(一時的な)
+        //$pro_image['tmp_name'] => 仮にアップロードされている画像本体の場所と名前
+        print '<img src="./image/' . $pro_image['name'] . '">';
+        print '<br/>';
+    }
+}
+
+
 
 if (preg_match('/^[0-9]+$/', $pro_price) == 0) {
     //もし半角数字じゃなかったら
@@ -54,6 +74,8 @@ if ( $pro_name == ''|| preg_match('/^[0-9]+$/', $pro_price) == 0) {
     print '<input type="hidden" name="code" value="' . $pro_code . '">';
     print '<input type="hidden" name="name" value="' . $pro_name . '">';
     print '<input type="hidden" name="price" value="' . $pro_price . '">';
+    print '<input type="hidden" name="image_name_old" value="' . $pro_image_name_old . '">';
+    print '<input type="hidden" name="image_name" value="' . $pro_image['name'] . '">';
     print '<br/>';
     print '<input type="button" onclick="history.back()" value="戻る">';
     print '<input type="submit" value="OK">';

@@ -25,7 +25,7 @@
         $dbh->query('SET NAMES utf8');
 
         //<<--2.SQL文指令-->>
-        $sql = 'SELECT name,price FROM mst_product WHERE code=?';
+        $sql = 'SELECT name,price,image FROM mst_product WHERE code=?';
         //1件のレコードに絞られる為、この後whileループは使わない
         $stmt = $dbh->prepare($sql);
         $data[] = $pro_code;
@@ -35,9 +35,17 @@
         //$stmtから1レコード取り出す
         $pro_name = $rec['name'];
         $pro_price = $rec['price'];
+        $pro_image_name_old = $rec['image'];
 
         //<<--3.データベースから切断-->>
         $dbh = null;
+
+        if ($pro_image_name_old == '') {
+            $disp_image = '';
+        } else {
+            $disp_image = '<img src="./image/' . $pro_image_name_old . '">';
+            //もし画像があれば、表示するためのHTMLタグを準備
+        }
     } catch (Exception $e) {
         print 'ただいま障害により大変ご迷惑をお掛けしております。';
         exit();
@@ -51,14 +59,20 @@
     <?php print $pro_code; ?>
     <br />
     <br />
-    <form method="post" action="pro_edit_check.php">
+    <form method="post" action="pro_edit_check.php" enctype="multipart/form-data">
         <input type="hidden" name="code" value="<?php print $pro_code; ?>">
+        <input type="hidden" name="image_name_old" value="<?php print $pro_image_name_old; ?>">
         <!-- PHPの変数に入っているものを表示する（これは非表示） -->
         商品名<br />
         <input type="text" name="name" style="width:200px" value="<?php print $pro_name; ?>"><br />
         <!-- 名前は入力済み（valueにセットした値が初期値）（初期化） -->
         価格<br />
         <input type="text" name="price" style="width:50px" value="<?php print $pro_price; ?>">円<br />
+        <br />
+        <?php print $disp_image; ?>
+        <br />
+        画像を選んでください。<br />
+        <input type="file" name="image" style="width:400px"><br />
         <br />
         <input type="button" onclick="history.back()" value="戻る">
         <input type="submit" value="OK">

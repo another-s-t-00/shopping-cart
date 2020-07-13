@@ -14,7 +14,8 @@
 try
 {
 
-$pro_code = $_POST['code'];
+    $pro_code = $_POST['code'];
+    $pro_image_name = $_POST['image_name'];
 
 //<--1.データベースに接続（PDO）-->
 $dsn = 'mysql:dbname=shop;host=localhost';
@@ -46,6 +47,12 @@ $stmt->execute($data);
 
 //<--3.データベースから切断-->
 $dbh = null;
+
+    if ($pro_image_name != '') {
+        unlink('./image/' . $pro_image_name);
+        //画像があれば削除
+    }
+
 
 }
 catch (Exception $e)

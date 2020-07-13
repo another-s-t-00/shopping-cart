@@ -17,6 +17,9 @@ try
     $pro_code = $_POST['code'];
     $pro_name = $_POST['name'];
 $pro_price = $_POST['price'];
+    $pro_image_name_old = $_POST['image_name_old'];
+    $pro_image_name = $_POST['image_name'];
+
 
     //サニタイジング
     $pro_code = htmlspecialchars($pro_code);
@@ -44,17 +47,26 @@ $dbh->query('SET NAMES utf8');
 //      インスタンス(完成車)のプロパティ(パーツ)・メソッド(動き方)を取り出す）
 
 //<--2.SQL文指令-->
-$sql = 'UPDATE mst_product SET name=?,price=? WHERE code=?';
+$sql = 'UPDATE mst_product SET name=?,price=?,image=? WHERE code=?';
 $stmt = $dbh->prepare($sql);
 //文を実行する準備を行い、文オブジェクトを返す
 $data[] = $pro_name;
     $data[] = $pro_price;
+    $data[] = $pro_image_name;
     $data[] = $pro_code;
     $stmt->execute($data);
 //準備したプリペアドステートメントを実行
 
 //<--3.データベースから切断-->
 $dbh = null;
+
+if($pro_image_name_old!=$pro_image_name){
+    if($pro_image_name_old!='')
+    {
+        unlink('./image/'.$pro_image_name_old);
+        //古い画像があれば削除
+    }
+}
 
 print '修正しました。<br/>';
 

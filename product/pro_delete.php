@@ -25,7 +25,7 @@
         $dbh->query('SET NAMES utf8');
 
         //<<--2.SQL文指令-->>
-        $sql = 'SELECT name FROM mst_product WHERE code=?';
+        $sql = 'SELECT name,image FROM mst_product WHERE code=?';
         //1件のレコードに絞られる為、この後whileループは使わない
         $stmt = $dbh->prepare($sql);
         $data[] = $pro_code;
@@ -34,9 +34,17 @@
         $rec = $stmt->fetch(PDO::FETCH_ASSOC);
         //$stmtから1レコード取り出す
         $pro_name = $rec['name'];
+        $pro_image_name = $rec['image'];
 
         //<<--3.データベースから切断-->>
         $dbh = null;
+
+        if ($pro_image_name == '') {
+            $disp_image = '';
+        } else {
+            $disp_image = '<img src="./image/' . $pro_image_name . '">';
+            //もし画像があれば、表示するためのHTMLタグを準備
+        }
     } catch (Exception $e) {
         print 'ただいま障害により大変ご迷惑をお掛けしております。';
         exit();
@@ -52,10 +60,13 @@
     商品名<br />
     <?php print $pro_name; ?>
     <br />
+    <?php print $disp_image; ?>
+    <br />
     この商品を削除してよろしいですか？<br />
     <br />
     <form method="post" action="pro_delete_done.php">
         <input type="hidden" name="code" value="<?php print $pro_code; ?>">
+        <input type="hidden" name="image_name" value="<?php print $pro_image_name; ?>">
         <!-- PHPの変数に入っているものを表示する（これは非表示） -->
         <input type="button" onclick="history.back()" value="戻る">
         <input type="submit" value="OK">

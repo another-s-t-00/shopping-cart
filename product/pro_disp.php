@@ -25,7 +25,7 @@
         $dbh->query('SET NAMES utf8');
 
         //<<--2.SQL文指令-->>
-        $sql = 'SELECT name,price FROM mst_product WHERE code=?';
+        $sql = 'SELECT name,price,image FROM mst_product WHERE code=?';
         //1件のレコードに絞られる為、この後whileループは使わない
         $stmt = $dbh->prepare($sql);
         $data[] = $pro_code;
@@ -35,9 +35,17 @@
         //$stmtから1レコード取り出す
         $pro_name = $rec['name'];
         $pro_price = $rec['price'];
+        $pro_image_name = $rec['image'];
 
         //<<--3.データベースから切断-->>
         $dbh = null;
+
+        if ($pro_image_name == '') {
+            $disp_image = '';
+        } else {
+            $disp_image = '<img src="./image/' . $pro_image_name . '">';
+            //もし画像があれば、表示するためのHTMLタグを準備
+        }
     } catch (Exception $e) {
         print 'ただいま障害により大変ご迷惑をお掛けしております。';
         exit();
@@ -55,6 +63,8 @@
     <br />
     価格<br />
     <?php print $pro_price; ?>円
+    <br />
+    <?php print $disp_image; ?>
     <br />
     <br />
     <form>
