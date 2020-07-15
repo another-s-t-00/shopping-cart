@@ -45,6 +45,12 @@ $dbh = null;
         print'スタッフコードかパスワードが間違っています。<br />';
         print'<a href="staff_login.html">戻る</a>';
     }else{
+        session_start();
+        // 自動で合言葉を設定
+        $_SESSION['login'] = 1;
+        // ログインOKの証拠を残す
+        $_SESSION['staff_code'] = $staff_code;
+        $_SESSION['staff_name'] = $rec['name'];
         header('Location: staff_top.php');
 
     }

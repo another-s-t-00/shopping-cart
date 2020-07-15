@@ -1,5 +1,15 @@
 <?php
 
+session_start();
+// 自動で合言葉を設定
+session_regenerate_id(true);
+//合言葉を毎回変更
+if (isset($_SESSION['login']) == false) {
+    print 'ログインされていません。<br />';
+    print '<a href="../staff_login/staff_login.html">ログイン画面へ</a>';
+    exit();
+}
+
 if (isset($_POST['disp']) == true) {
     if (isset($_POST['staffcode']) == false) {
         header('Location: staff_ng.php');
