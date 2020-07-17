@@ -1,5 +1,10 @@
 <?php
 
+require_once('../common/common.php');
+//インクルードする（読み込む）
+
+$post = sanitize($_POST);
+
 try
 {
 
@@ -7,12 +12,8 @@ try
     //・GETリクエスト：データがURLにも引き渡される
     //・POSTリクエスト：データがURLには引き渡されない
     //よって、パスワード等を含む場合は「POSTリクエスト」を使用
-    $staff_code = $_POST['code'];
-    $staff_pass = $_POST['pass'];
-
-    //サニタイジング（Sanitizing、無害化、セキュリティ対策）
-    $staff_code = htmlspecialchars($staff_code);
-    $staff_pass = htmlspecialchars($staff_pass);
+    $staff_code = $post['code'];
+    $staff_pass = $post['pass'];
 
     $staff_pass = md5($staff_pass);
     //「md5」はパスワードの暗号化

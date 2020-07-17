@@ -26,20 +26,20 @@ if (isset($_SESSION['login']) == false) {
 
     <?php
 
+    require_once('../common/common.php');
+    //インクルードする（読み込む）
+
+    $post = sanitize($_POST);
+
     //前の画面で入力されたデータ（「form」=>「postメソッド」の中）を$_POST（POSTリクエスト）で取り出し、変数にコピー
     //・GETリクエスト：データがURLにも引き渡される
     //・POSTリクエスト：データがURLには引き渡されない
     //よって、パスワード等を含む場合は「POSTリクエスト」を使用
-    $pro_code = $_POST['code'];
-    $pro_name = $_POST['name'];
-    $pro_price = $_POST['price'];
-    $pro_image_name_old = $_POST['image_name_old'];
+    $pro_code = $post['code'];
+    $pro_name = $post['name'];
+    $pro_price = $post['price'];
+    $pro_image_name_old = $post['image_name_old'];
     $pro_image = $_FILES['image'];
-
-    //サニタイジング（Sanitizing、無害化、セキュリティ対策）
-    $pro_code = htmlspecialchars($pro_code);
-    $pro_name = htmlspecialchars($pro_name);
-    $pro_price = htmlspecialchars($pro_price);
 
     //1.商品名チェック
     //入力が成功すると、商品名を出力

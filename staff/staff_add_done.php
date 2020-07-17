@@ -26,17 +26,18 @@ if (isset($_SESSION['login']) == false) {
 
     <?php
 
+    require_once('../common/common.php');
+    //インクルードする（読み込む）
+
+    $post = sanitize($_POST);
+
     //「try-catch」構文、データベースサーバーの障害対策、エラートラップ
     //通常時はtryのコードが実行され、エラーがなければcatch(err)は無視される
     //データベースサーバーにエラーが発生した場合、tryの実行が停止し、catch(err)へ
     try {
 
-        $staff_name = $_POST['name'];
-        $staff_pass = $_POST['pass'];
-
-        //サニタイジング
-        $staff_name = htmlspecialchars($staff_name);
-        $staff_pass = htmlspecialchars($staff_pass);
+        $staff_name = $post['name'];
+        $staff_pass = $post['pass'];
 
         //<--1.データベースに接続（PDO）-->
         $dsn = 'mysql:dbname=shop;host=localhost';

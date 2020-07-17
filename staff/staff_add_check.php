@@ -26,18 +26,18 @@ if (isset($_SESSION['login']) == false) {
 
     <?php
 
+    require_once('../common/common.php');
+    //インクルードする（読み込む）
+
+    $post = sanitize($_POST);
+
     //前の画面で入力されたデータ（「form」=>「postメソッド」の中）を$_POST（POSTリクエスト）で取り出し、変数にコピー
     //・GETリクエスト：データがURLにも引き渡される
     //・POSTリクエスト：データがURLには引き渡されない
     //よって、パスワード等を含む場合は「POSTリクエスト」を使用
-    $staff_name = $_POST['name'];
-    $staff_pass = $_POST['pass'];
-    $staff_pass2 = $_POST['pass2'];
-
-    //サニタイジング（Sanitizing、無害化、セキュリティ対策）
-    $staff_name = htmlspecialchars($staff_name);
-    $staff_pass = htmlspecialchars($staff_pass);
-    $staff_pass2 = htmlspecialchars($staff_pass2);
+    $staff_name = $post['name'];
+    $staff_pass = $post['pass'];
+    $staff_pass2 = $post['pass2'];
 
     //1.スタッフ名チェック
     //入力が成功すると、スタッフ名を出力
