@@ -36,9 +36,12 @@ if (isset($_SESSION['member_login']) == false) {
 
         if (isset($_SESSION['cart']) == true) {
             $cart = $_SESSION['cart'];
+            $quantity = $_SESSION['quantity'];
         }
         $cart[] = $pro_code;
+        $quantity[] = 1;
         $_SESSION['cart'] = $cart;
+        $_SESSION['quantity'] = $quantity;
         //$_SESSION => データを入れておけば、どのページからでもそのデータが見れる
 
     } catch (Exception $e) {

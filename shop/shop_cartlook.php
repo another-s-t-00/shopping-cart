@@ -32,8 +32,9 @@ if (isset($_SESSION['member_login']) == false) {
     try {
 
         $cart = $_SESSION['cart'];
+        $quantity = $_SESSION['quantity'];
         //保管していたカートの中身を戻す
-        $max=count($cart);
+        $max = count($cart);
 
         //<<--1.データベースに接続（PDO）-->>
         //pro_add_doneと同じ
@@ -44,19 +45,19 @@ if (isset($_SESSION['member_login']) == false) {
         $dbh->query('SET NAMES utf8');
 
         foreach ($cart as $key => $val) {
-        //<<--2.SQL文指令-->>
-        $sql = 'SELECT code,name,price,image FROM mst_product WHERE code=?';
-        //1件のレコードに絞られる為、この後whileループは使わない
-        $stmt = $dbh->prepare($sql);
-        $data[0] = $val;
-        $stmt->execute($data);
+            //<<--2.SQL文指令-->>
+            $sql = 'SELECT code,name,price,image FROM mst_product WHERE code=?';
+            //1件のレコードに絞られる為、この後whileループは使わない
+            $stmt = $dbh->prepare($sql);
+            $data[0] = $val;
+            $stmt->execute($data);
 
             $rec = $stmt->fetch(PDO::FETCH_ASSOC);
             //$stmtから1レコード取り出す
             $pro_name[] = $rec['name'];
             $pro_price[] = $rec['price'];
 
-            if($rec['image'] == '') {
+            if ($rec['image'] == '') {
                 $pro_image[] = '';
             } else {
                 $pro_image[] = '<img src="../product/image/' . $rec['image'] . '">';
@@ -66,10 +67,6 @@ if (isset($_SESSION['member_login']) == false) {
 
         //<<--3.データベースから切断-->>
         $dbh = null;
-
-
-
-
     } catch (Exception $e) {
         print 'ただいま障害により大変ご迷惑をお掛けしております。';
         exit();
@@ -77,7 +74,24 @@ if (isset($_SESSION['member_login']) == false) {
 
     ?>
 
-    <form>
+    カートの中身<br />
+    <br />
+    <form method="post" action="quantity_change.php">
+        <?php
+        for ($i = 0; $i < $max; $i++) {
+        ?>
+            <?php print $pro_name[$i]; ?>
+            <?php print $pro_image[$i]; ?>
+            <?php print $pro_price[$i]; ?>円
+            <input type="text" name="quantity<?php print $i; ?>" value="<?php print $quantity[$i]; ?>">
+            <?php print $pro_price[$i] * $quantity[$i]; ?>円
+            <input type="checkbox" name="delete<?php print $i; ?>">
+            <br />
+        <?php
+        }
+        ?>
+        <input type="hidden" name="max" value="<?php print $max; ?>">
+        <input type="submit" value="数量変更"><br />
         <input type="button" onclick="history.back()" value="戻る">
     </form>
 
