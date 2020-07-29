@@ -31,10 +31,22 @@ if (isset($_SESSION['member_login']) == false) {
 
     try {
 
+        if (isset($_SESSION['cart']) == true) {
         $cart = $_SESSION['cart'];
         $quantity = $_SESSION['quantity'];
         //保管していたカートの中身を戻す
         $max = count($cart);
+        }else{
+            $max=0;
+        }
+
+        if ($max == 0) {
+            print 'カートに商品が入っていません。<br />';
+            print '<br />';
+            print '<a href="shop_list.php">商品一覧へ戻る</a>';
+            exit();
+        }
+
 
         //<<--1.データベースに接続（PDO）-->>
         //pro_add_doneと同じ
