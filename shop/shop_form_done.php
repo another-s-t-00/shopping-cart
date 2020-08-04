@@ -112,6 +112,13 @@ session_regenerate_id(true);
         mb_internal_encoding('UTF-8');
         mb_send_mail($email, $title, $honbun, $header);
 
+        $title = 'お客様からご注文がありました。';
+        $header = 'From: '. $email;
+        $honbun = html_entity_decode($honbun, ENT_QUOTES, 'UTF-8');
+        mb_language('Japanese');
+        mb_internal_encoding('UTF-8');
+        mb_send_mail('info@rokumarunouen.co.jp', $title, $honbun, $header);
+
     } catch (Exception $e) {
         print 'ただいま障害により大変ご迷惑をお掛けしております。';
         exit();
