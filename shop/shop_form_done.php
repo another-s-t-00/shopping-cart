@@ -16,32 +16,32 @@ session_regenerate_id(true);
 
     <?php
 
-    try{
+    try {
 
-    require_once('../common/common.php');
-    //インクルードする（読み込む）
+        require_once('../common/common.php');
+        //インクルードする（読み込む）
 
-    $post = sanitize($_POST);
+        $post = sanitize($_POST);
 
-    //前の画面で入力されたデータ（「form」=>「postメソッド」の中）を$_POST（POSTリクエスト）で取り出し、変数にコピー
-    //・GETリクエスト：データがURLにも引き渡される
-    //・POSTリクエスト：データがURLには引き渡されない
-    //よって、パスワード等を含む場合は「POSTリクエスト」を使用
-    $onamae = $post['onamae'];
-    $email = $post['email'];
-    $postal1 = $post['postal1'];
-    $postal2 = $post['postal2'];
-    $address = $post['address'];
-    $tel = $post['tel'];
+        //前の画面で入力されたデータ（「form」=>「postメソッド」の中）を$_POST（POSTリクエスト）で取り出し、変数にコピー
+        //・GETリクエスト：データがURLにも引き渡される
+        //・POSTリクエスト：データがURLには引き渡されない
+        //よって、パスワード等を含む場合は「POSTリクエスト」を使用
+        $onamae = $post['onamae'];
+        $email = $post['email'];
+        $postal1 = $post['postal1'];
+        $postal2 = $post['postal2'];
+        $address = $post['address'];
+        $tel = $post['tel'];
 
 
-    print $onamae . '様<br/>';
-    print 'ご注文ありがとうございました。<br/>';
-    print $email . 'にメールをお送りしましたのでご確認ください。<br/>';
-    print '商品は以下の住所に発送させていただきます。<br/>';
-    print $postal1 . '-' . $postal2 . '<br/>';
-    print $address . '<br/>';
-    print $tel . '<br/>';
+        print $onamae . '様<br/>';
+        print 'ご注文ありがとうございました。<br/>';
+        print $email . 'にメールをお送りしましたのでご確認ください。<br/>';
+        print '商品は以下の住所に発送させていただきます。<br/>';
+        print $postal1 . '-' . $postal2 . '<br/>';
+        print $address . '<br/>';
+        print $tel . '<br/>';
 
         $honbun = '';
         $honbun .= $onamae . "様\n\nこの度はご注文ありがとうございました。\n";
@@ -76,13 +76,19 @@ session_regenerate_id(true);
             $price = $rec['price'];
             $kakaku[] = $price;
             $suryo = $quantity[$i];
-            $shokei = $price*$suryo;
+            $shokei = $price * $suryo;
 
-            $honbun .= $name .'';
-            $honbun .= $price .'円 x';
-            $honbun .= $suryo .'個 =';
+            $honbun .= $name . '';
+            $honbun .= $price . '円 x';
+            $honbun .= $suryo . '個 =';
             $honbun .= $shokei . "円 \n";
         }
+
+        //<<--2.SQL文指令-->>
+        $sql = 'LOCK TABLES dat_sales,dat_sales_product WRITE';
+        //順番待ち行列「キュー(queue)」の作成
+        $stmt = $dbh->prepare($sql);
+        $stmt->execute();
 
         //注文データを追加
         //<--2.SQL文指令（レコード(データベースの行)を追加）-->
@@ -124,6 +130,10 @@ session_regenerate_id(true);
             //準備したプリペアドステートメントを実行
         }
 
+        //<<--2.SQL文指令-->>
+        $sql = 'UNLOCK TABLES';
+        $stmt = $dbh->prepare($sql);
+        $stmt->execute();
 
         //<<--3.データベースから切断-->>
         $dbh = null;
@@ -154,18 +164,20 @@ session_regenerate_id(true);
         mb_send_mail($email, $title, $honbun, $header);
 
         $title = 'お客様からご注文がありました。';
-        $header = 'From: '. $email;
+        $header = 'From: ' . $email;
         $honbun = html_entity_decode($honbun, ENT_QUOTES, 'UTF-8');
         mb_language('Japanese');
         mb_internal_encoding('UTF-8');
         mb_send_mail('info@rokumarunouen.co.jp', $title, $honbun, $header);
-
     } catch (Exception $e) {
         print 'ただいま障害により大変ご迷惑をお掛けしております。';
         exit();
     }
 
     ?>
+
+    </br>
+    <a href="shop_list.php">商品画面へ</a>
 
 </body>
 
